@@ -28,7 +28,7 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
     List<Serie> findByGenero(Categoria categoria);
 
     // Buscar séries pelo número total de temporadas
-    // Usando a Query nativa JPA
+    // Usando Derived Query
    // List<Serie> findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(int totalTemporadas, double avaliacao);
 
     // Usando a Query JPQL
@@ -46,7 +46,13 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
     @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE s = :serie AND YEAR(e.dataLancamento) >= :anoLancamento")
     List<Episodio> episodiosPorSerieEAno(Serie serie, int anoLancamento);
 
-    List<Serie> findTop5ByOrderByEpisodiosDataLancamentoDesc();
+    // List<Serie> findTop5ByOrderByEpisodiosDataLancamentoDesc();
+    // Refatorar para JPQL
+    @Query("SELECT s FROM Serie s " +
+            "JOIN s.episodios e " +
+            "GROUP BY s " +
+            "ORDER BY MAX(e.dataLancamento) DESC LIMIT 5")
+    List<Serie> encontrarEpisodiosMaisRecentes();
 
 }
 

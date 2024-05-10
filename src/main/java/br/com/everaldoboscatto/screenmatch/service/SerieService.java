@@ -4,9 +4,11 @@ import br.com.everaldoboscatto.screenmatch.dto.SerieDTO;
 import br.com.everaldoboscatto.screenmatch.model.Serie;
 import br.com.everaldoboscatto.screenmatch.repository.SerieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service // O @Service indica ao Spring que é uma classe que ele vai gerenciar
@@ -36,6 +38,24 @@ public class SerieService {
     }
 
     public List<SerieDTO> obterLancamntos() {
-        return converteDados(repositorio.findTop5ByOrderByEpisodiosDataLancamentoDesc());
+        //return converteDados(repositorio.findTop5ByOrderByEpisodiosDataLancamentoDesc());
+        // Refatorar
+        return converteDados(repositorio.encontrarEpisodiosMaisRecentes());
+    }
+
+    public SerieDTO obterPorId(Long id) {
+        Optional<Serie> serie = repositorio.findById(id);
+        if (serie.isPresent()) {
+            Serie s = serie.get();
+            return new SerieDTO( s.getId(),
+                    s.getTitulo(),
+                    s.getTotalTemporadas(),
+                    s.getAvaliacao(),
+                    s.getGenero(),
+                    s.getAtores(),
+                    s.getPoster(),
+                    s.getSinopse());
+        }
+        return null;
     }
 }
