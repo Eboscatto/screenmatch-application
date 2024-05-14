@@ -27,11 +27,10 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
     // Buscar séries por categoria/gênero
     List<Serie> findByGenero(Categoria categoria);
 
-    // Buscar séries pelo número total de temporadas
-    // Usando Derived Query
-   // List<Serie> findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(int totalTemporadas, double avaliacao);
+    // Buscar séries pelo número total de temporadas - Derived Query
+    List<Serie> findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(int totalTemporadas, double avaliacao);
 
-    // Usando a Query JPQL
+    // Buscar séries pelo número total de temporadas - Query JPQL
     @Query("select s from Serie s WHERE s.totalTemporadas <= :totalTemporadas AND s.avaliacao >= :avaliacao")
     List<Serie> seriesPorTemporadaEAValiacao(int totalTemporadas, double avaliacao);
 
@@ -40,19 +39,23 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
 
     // Selecionar a serie, juntar com episodios e ordenar a avaliacao do episodio em ordem decrescente,
-    // limitando aos 5 primeiro episodios
+    // limitando aos 5 primeiros episodios
     @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE s = :serie ORDER BY e.avaliacao DESC LIMIT 5")
     List<Episodio> topEpisodiosPorSerie(Serie serie);
     @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE s = :serie AND YEAR(e.dataLancamento) >= :anoLancamento")
     List<Episodio> episodiosPorSerieEAno(Serie serie, int anoLancamento);
 
     // List<Serie> findTop5ByOrderByEpisodiosDataLancamentoDesc();
-    // Refatorar para JPQL
+    // Derived Query não atende os requisitos, portanto, Refatorar para JPQL
     @Query("SELECT s FROM Serie s " +
             "JOIN s.episodios e " +
             "GROUP BY s " +
             "ORDER BY MAX(e.dataLancamento) DESC LIMIT 5")
     List<Serie> encontrarEpisodiosMaisRecentes();
 
+    // Selecionar a série e os episódios,
+    // pegar os episódios da série do respectivo id e a temporada do respectivo número
+    @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE s.id = :id AND e.numeroTemporada = :numero")
+    List<Episodio> obterEpisodiosPorTemporada(Long id, Long numero);
 }
 

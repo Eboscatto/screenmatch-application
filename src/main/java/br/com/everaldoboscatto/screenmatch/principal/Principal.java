@@ -131,7 +131,7 @@ public class Principal {
 
             List<Episodio> episodios = listaTemporadas.stream()
                     .flatMap(d -> d.episodios().stream()
-                            .map(e -> new Episodio(d.numeroTemporada(), e)))
+                            .map(e -> new Episodio(d.numero(), e)))
                     .collect(Collectors.toList());
             serieEncontrada.setEpisodios(episodios);
             repositorio.save(serieEncontrada);

@@ -62,7 +62,6 @@ public class Episodio {
     public void setNumeroTemporada(Integer numeroTemporada) {
         this.numeroTemporada = numeroTemporada;
     }
-
     public String getTituloEpisodio() {
         return tituloEpisodio;
     }
@@ -105,7 +104,7 @@ public class Episodio {
     }
     @Override
     public String toString() {
-        return  "numeroTemporada=" + numeroTemporada +
+        return  "temporada=" + numeroTemporada +
                 ", tituloEpisodio='" + tituloEpisodio + '\'' +
                 ", numeroEpisodio=" + numeroEpisodio +
                 ", avaliacao=" + avaliacao +
